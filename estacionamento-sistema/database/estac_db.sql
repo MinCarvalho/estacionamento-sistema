@@ -1,0 +1,165 @@
+CREATE DATABASE  IF NOT EXISTS `estac_db` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
+USE `estac_db`;
+-- MySQL dump 10.13  Distrib 8.0.44, for Win64 (x86_64)
+--
+-- Host: localhost    Database: estac_db
+-- ------------------------------------------------------
+-- Server version	5.5.5-10.4.32-MariaDB
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `automovel`
+--
+
+DROP TABLE IF EXISTS `automovel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `automovel` (
+  `id_automovel` int(11) NOT NULL AUTO_INCREMENT,
+  `id_cliente` int(11) NOT NULL,
+  `id_preco` int(11) NOT NULL,
+  `placa` varchar(7) NOT NULL,
+  PRIMARY KEY (`id_automovel`),
+  UNIQUE KEY `placa` (`placa`),
+  KEY `id_cliente` (`id_cliente`),
+  KEY `id_preco` (`id_preco`),
+  CONSTRAINT `automovel_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`),
+  CONSTRAINT `automovel_ibfk_2` FOREIGN KEY (`id_preco`) REFERENCES `precos` (`id_preco`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `automovel`
+--
+
+LOCK TABLES `automovel` WRITE;
+/*!40000 ALTER TABLE `automovel` DISABLE KEYS */;
+/*!40000 ALTER TABLE `automovel` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `clientes`
+--
+
+DROP TABLE IF EXISTS `clientes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `clientes` (
+  `id_cliente` int(11) NOT NULL AUTO_INCREMENT,
+  `nome_cliente` varchar(50) NOT NULL,
+  `cpf_cliente` varchar(11) NOT NULL,
+  `data_registro` date NOT NULL,
+  PRIMARY KEY (`id_cliente`),
+  UNIQUE KEY `cpf_cliente` (`cpf_cliente`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `clientes`
+--
+
+LOCK TABLES `clientes` WRITE;
+/*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `pagamento`
+--
+
+DROP TABLE IF EXISTS `pagamento`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pagamento` (
+  `id_pagamento` int(11) NOT NULL AUTO_INCREMENT,
+  `id_cliente` int(11) NOT NULL,
+  `valor_total` decimal(7,2) NOT NULL,
+  `mes_referente` int(11) NOT NULL,
+  `ano_referente` int(11) NOT NULL,
+  `data_vencimento` date NOT NULL,
+  `forma_de_pagamento` enum('pix','dinheiro','cartão') NOT NULL,
+  `status` enum('pendente','pago') NOT NULL,
+  PRIMARY KEY (`id_pagamento`),
+  KEY `id_cliente` (`id_cliente`),
+  CONSTRAINT `pagamento_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `clientes` (`id_cliente`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pagamento`
+--
+
+LOCK TABLES `pagamento` WRITE;
+/*!40000 ALTER TABLE `pagamento` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pagamento` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `precos`
+--
+
+DROP TABLE IF EXISTS `precos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `precos` (
+  `id_preco` int(11) NOT NULL AUTO_INCREMENT,
+  `tipo` enum('moto','carro') NOT NULL,
+  `valor` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`id_preco`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `precos`
+--
+
+LOCK TABLES `precos` WRITE;
+/*!40000 ALTER TABLE `precos` DISABLE KEYS */;
+INSERT INTO `precos` VALUES (1,'moto',50.00),(2,'carro',100.00),(3,'moto',50.00),(4,'carro',100.00);
+/*!40000 ALTER TABLE `precos` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tabela_precos`
+--
+
+DROP TABLE IF EXISTS `tabela_precos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tabela_precos` (
+  `id_preco` int(11) NOT NULL AUTO_INCREMENT,
+  `tipo` enum('moto','carro') NOT NULL,
+  `valor` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`id_preco`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tabela_precos`
+--
+
+LOCK TABLES `tabela_precos` WRITE;
+/*!40000 ALTER TABLE `tabela_precos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tabela_precos` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2025-12-01 16:52:26
